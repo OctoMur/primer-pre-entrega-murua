@@ -1,3 +1,5 @@
+const { title } = require("process");
+
 const fs = require("fs").promises;
 
 
@@ -22,7 +24,7 @@ class ProductManager{
     
                 if (maxId > ProductManager.idProduct) {
                     ProductManager.idProduct = maxId;
-                    console.log(ProductManager.idProduct);
+                    // console.log(ProductManager.idProduct);
                 }
             } else {
                 console.log('La lista de productos está vacía o no se pudo leer.');
@@ -100,37 +102,51 @@ class ProductManager{
     async saveFile(newArrayObjetcs){
         try{
             await fs.writeFile(this.path, JSON.stringify(newArrayObjetcs, null, 2))
+            // console.log(newArrayObjetcs)
         }
         catch (error){
             console.error("error al guardar el archivo", error);
         }
     }
 
-    async updateProduct(id, productUpdated){
+    async updateProduct(id, dataUpdate){
         try {
             const arrayProducts = await this.readFile();
-            const index = arrayProducts.findIndex(item => item.id === id);
+            const index = arrayProducts.findIndex(item => item.id == id);
+
+            const productUpdated = {
+                id : parseInt(id),
+                title: dataUpdate.title !== null ? arrayProducts[index].title : dataUpdate.title,
+                description: dataUpdate.description  == null ? arrayProducts[index].description : dataUpdate.description,
+                code: dataUpdate.code == null ? arrayProducts[index].code : dataUpdate.code,
+                price: dataUpdate.price == null ? arrayProducts[index].price : dataUpdate.price,
+                status: dataUpdate.status == null ? arrayProducts[index].status : dataUpdate.status,
+                stock: dataUpdate.stock == null ? arrayProducts[index].stock : dataUpdate.stock,
+                category: dataUpdate.category == null ? arrayProducts[index].category : dataUpdate.category,
+                thumbnails: dataUpdate.thumbnails == null ? arrayProducts[index].thumbnails : dataUpdate.thumbnails
+            }
 
             if(index !== -1){
                 arrayProducts.splice(index, 1, productUpdated)
                 await this.saveFile(arrayProducts)
+                console.log(arrayProducts)
             }
             else{
                 console.log("producto no encontrado")
             }
         } catch (error) {
-            console.log("Error al actualizar el archivo")
+            console.log("Error al actualizar el archivo", error)
         }
     }
 
     async deleteProduct(id){
         try {
             const arrayProducts = await this.readFile();
-            const index = arrayProducts.findIndex(item => item.id === id);
+            const index = arrayProducts.findIndex(item => item.id == id);
 
             if(index !== -1){
-                const newArrayProducts = arrayProducts.filter(product => product.id !== id)
-                await this.saveFile(newArrayProducts)
+                arrayProducts.splice(index, 1)
+                await this.saveFile(arrayProducts)
             }
             else{
                 console.log("producto no encontrado")
@@ -142,20 +158,3 @@ class ProductManager{
 }
 
 module.exports = ProductManager;
-
-//el siguiente codigo fue el que hice para generar el archivo db.json
-
-/*const manager = new ProductManager("./products.json")
-for(i = 1 ; i<11; i++){
-    const newProduct={
-        id: ProductManager.idProduct++,
-        title: `producto ${i}`,
-        description: "Este es un producto prueba",
-        price: i * 100,
-        img: "Sin imagen",
-        code: `abc10${i}`,
-        stock: i*5
-    }
-
-    manager.addProduct(newProduct)
-}*/

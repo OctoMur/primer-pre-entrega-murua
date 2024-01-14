@@ -15,9 +15,9 @@
     "title": "Intel I5 10400f",
     "description": "Procesador Intel I5 generacion 10",
     "code": "123b",
-    "price": 150000,
+    "price": 180000,
     "status": true,
-    "stock": 25,
+    "stock": 12,
     "category": "Processors",
     "thumbnails": "NaN"
   },

@@ -58,4 +58,18 @@ router.post("/", (req, res) =>{
     res.send({status:"sucess", message: "producto creado"})
 })
 
+router.put("/products/:pid", (req, res) =>{
+    const {pid} = req.params;
+    const productUpdated = req.body;
+    console.log(pid)
+    productManager.updateProduct(pid, productUpdated)
+    res.send({status:"sucess", message: "producto actualizado"})
+})
+
+router.delete("/products/:pid", (req, res) =>{
+    const {pid} = req.params;
+
+    productManager.deleteProduct(pid);
+    res.send({status: "success", message: "Producto eliminado"});
+})
 module.exports = router;
