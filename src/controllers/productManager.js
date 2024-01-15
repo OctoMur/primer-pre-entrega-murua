@@ -1,5 +1,3 @@
-const { title } = require("process");
-
 const fs = require("fs").promises;
 
 
@@ -7,7 +5,7 @@ class ProductManager{
     static idProduct = 0;
 
     constructor(productsDbPath){
-        this.products = []; //actualizar mas adelante para que verifique si no existe un archivo JSON con productos guardados.
+        this.products = [];
         this.path = productsDbPath;
         this.verifyProducts();
     }
@@ -19,12 +17,10 @@ class ProductManager{
             if (productsList && productsList.length > 0) {
                 this.products = productsList;
     
-                // Usar reduce con un valor inicial para asegurar la comparación
                 const maxId = productsList.reduce((max, product) => (product.id > max ? product.id : max), 0);
     
                 if (maxId > ProductManager.idProduct) {
                     ProductManager.idProduct = maxId;
-                    // console.log(ProductManager.idProduct);
                 }
             } else {
                 console.log('La lista de productos está vacía o no se pudo leer.');
@@ -102,7 +98,6 @@ class ProductManager{
     async saveFile(newArrayObjetcs){
         try{
             await fs.writeFile(this.path, JSON.stringify(newArrayObjetcs, null, 2))
-            // console.log(newArrayObjetcs)
         }
         catch (error){
             console.error("error al guardar el archivo", error);

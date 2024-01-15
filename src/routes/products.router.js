@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 
 const ProductManager = require("../controllers/productManager")
-
 const productManager = new ProductManager("./src/models/products.json")
 
 //muestra todos los productos del archivo en base a un query
@@ -50,7 +49,7 @@ router.get("/products/:pid", async (req, res) => {
         }
 });
 
-router.post("/", (req, res) =>{
+router.post("/products", (req, res) =>{
     const newProduct = req.body;
 
     productManager.addProduct(newProduct);
